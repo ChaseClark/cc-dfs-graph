@@ -1,0 +1,9 @@
+# Sample input file for World Peace
+# Format described in corresponding specs
+# V W1 C1 W2 C2 W3 C3...
+# C will always be 0 < C < 100
+# X and Y are target vertices
+A B 11 C 1
+B A 4 D 12
+C D 1
+D A 12 B 9 C 5
