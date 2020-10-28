@@ -23,11 +23,18 @@ public class CCGraphDFS implements COSC310_P01 {
                     String[] lineArr = line.split(" "); // each line is space-delimited
                     if (lineArr.length > 0) {// check if line has values
                         // here we need to set the first entry to be the target index/current node (linArr[0])
-                        System.out.print("createAdjMatrix -> " + lineArr[0] + "-> length: " + lineArr.length);
+                        System.out.println("createAdjMatrix -> " + lineArr[0] + "-> length: " + lineArr.length);
                         // convert letter to index integer
                         var currentNode = convertLetterToIndex(lineArr[0]);
                         // after this point the values we are looking for are in pairs (connectedNode, cost)
                         // we need to make a loop that works in pairs could use mod 2 or increment index by 2 each time
+                        // for loop to i < length linArr ; i += 2 ... we start at i = 1 because 0 is currentNode
+                        for (int i = 1; i < lineArr.length; i+=2) {
+                            var targetNode = convertLetterToIndex(lineArr[i]);
+                            var cost = Integer.parseInt(lineArr[i+1]);
+                            // add edge to graph
+                            matrix[currentNode][targetNode] = cost;
+                        }
                     }
                 }
             }
@@ -52,6 +59,18 @@ public class CCGraphDFS implements COSC310_P01 {
         }
         else
             return -1; // fail
+    }
+
+    /**
+     * Test method to print out 2d array
+     */
+    private void printMatrix(){
+        for (int i = 0; i < adjMatrix.length; i++) {
+            for (int j = 0; j < adjMatrix.length; j++) {
+                System.out.print(adjMatrix[i][j]+"   ");
+            }
+            System.out.println();
+        }
     }
 
     @Override
@@ -87,7 +106,7 @@ public class CCGraphDFS implements COSC310_P01 {
 
         // load a test file
         System.out.println("Testing...");
-        adjMatrix = createAdjMatrix("worldmap_0000.txt",26);
+        adjMatrix = createAdjMatrix("worldmap_0003.txt",26);
         runDFS1();
 
 
@@ -101,6 +120,7 @@ public class CCGraphDFS implements COSC310_P01 {
 
     /**
      * Visit the adjacent vertices in alphabetic order. (If the adjacents are A, B, and C, visit A first).
+     * targets are 23 and 24 which are x/y
      * Output: print results to console
      */
     @Override
