@@ -11,7 +11,8 @@ import java.util.List;
 
 public class CCGraphDFS implements COSC310_P01 {
 
-    // TODO: Make DFS2 select vertex with lowest edge cost instead of alphabetical
+    // TODO: Do DFS3
+    // TODO: cleanup code comments and create jar file
 
     private int[][] graph;
     private ArrayList<Character> visitedNodes = new ArrayList<Character>();
@@ -226,6 +227,11 @@ public class CCGraphDFS implements COSC310_P01 {
         }
     }
 
+    /**
+     * Helper method to find adjacent nodes and sort them
+     * @param current the current node
+     * @return an arraylist of nodes in ascending order
+     */
     private ArrayList<Integer> findAdjacentsSortedByLowestCost(int current){
         ArrayList<Integer> adjacents = new ArrayList<Integer>();
         for (int j = 0; j < graph[current].length; j++) {
