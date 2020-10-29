@@ -5,11 +5,17 @@ import edu.frostburg.cosc310.fa20.COSC310_P01;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CCGraphDFS implements COSC310_P01 {
 
-    private int[][] adjMatrix;
+    // TODO: add helper method to print ArrayList
+    // TODO: make dfs stop on X or Y
+
+    private int[][] graph;
+    private ArrayList<Character> visitedNodes = new ArrayList<Character>();
+    private boolean targetAcquired = false; // true if X or Y is found when searching
 
     private int[][] createAdjMatrix(String path, int arrayLength) {
         var matrix = new int[arrayLength][arrayLength];
@@ -62,12 +68,25 @@ public class CCGraphDFS implements COSC310_P01 {
     }
 
     /**
+     * Takes an index and converts it to a corresponding capital letter
+     * @param index
+     * @return char letter
+     */
+    private char convertIndexToLetter(int index) {
+        if (index > 0)
+            return (char)(index + 65);
+        else
+            return '#'; // fail
+    }
+
+
+    /**
      * Test method to print out 2d array
      */
     private void printMatrix(){
-        for (int i = 0; i < adjMatrix.length; i++) {
-            for (int j = 0; j < adjMatrix.length; j++) {
-                System.out.print(adjMatrix[i][j]+"   ");
+        for (int i = 0; i < graph.length; i++) {
+            for (int j = 0; j < graph.length; j++) {
+                System.out.print(graph[i][j]+"   ");
             }
             System.out.println();
         }
@@ -106,7 +125,7 @@ public class CCGraphDFS implements COSC310_P01 {
 
         // load a test file
         System.out.println("Testing...");
-        adjMatrix = createAdjMatrix("worldmap_0003.txt",26);
+        graph = createAdjMatrix("worldmap_0003.txt",26);
         runDFS1();
 
 
@@ -125,7 +144,37 @@ public class CCGraphDFS implements COSC310_P01 {
      */
     @Override
     public void runDFS1() {
+
+        // dfs alphabetically
+        var visited = new boolean[graph.length];
+        // reset list
+        visitedNodes.clear();
+        dfsAlphabetical(0, visited);
         System.out.println("Search 1: ");
+        System.out.println(visitedNodes.toString());
+    }
+    // our graph is automatically in alphabetical order due to how our matrix is set up
+    // need to count the count until X(23) or Y(24) is found
+    private void dfsAlphabetical(int current, boolean[] visited) {
+        // loop through row
+
+
+        for (int adj = 0; adj< graph.length; adj++) {
+            if (graph[current][adj] > 0 && !visited[adj] && !targetAcquired) {
+                System.out.println("Current: "+current+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
+                // mark as visited
+                visited[adj] = true;
+                // add letter to list
+                visitedNodes.add(convertIndexToLetter(adj));
+                // see if we are done
+                if (adj == 23 || adj == 24) // X or Y
+                    // here we can  set adj to graph.length to stop the loop
+                    //System.out.println("found");
+                    adj = graph.length;
+                else
+                    dfsAlphabetical(adj, visited); // keep searching
+            }
+        }
     }
 
     /**
@@ -148,5 +197,6 @@ public class CCGraphDFS implements COSC310_P01 {
     @Override
     public void runDFS3() {
         System.out.println("Search 3: ");
+        // use int[] visited and if (visited[adj] < 3)
     }
 }
