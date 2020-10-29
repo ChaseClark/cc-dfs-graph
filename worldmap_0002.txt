@@ -1,4 +1,7 @@
 # Chases test file
-A C 1 D 3 B 11
-B Y 4 E 50
+A C 1 D 3 B 7
+B Y 40 E 5
 E T 2
+T J 5
+J K 4
+K X 9
