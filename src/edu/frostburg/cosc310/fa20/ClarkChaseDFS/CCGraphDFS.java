@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class CCGraphDFS implements COSC310_P01 {
@@ -125,7 +126,7 @@ public class CCGraphDFS implements COSC310_P01 {
         System.out.println();
 
         // load the worldmap
-        graph = createAdjMatrix("worldmap_0002.txt",26);
+        graph = createAdjMatrix("worldmap_0000.txt",26);
         runDFS1();
         runDFS2();
 //        runDFS3();
@@ -163,7 +164,6 @@ public class CCGraphDFS implements COSC310_P01 {
         // loop through row
         for (int adj = 0; adj< graph.length; adj++) {
             if (graph[current][adj] > 0 && !visited[adj] && !targetAcquired) {
-                // System.out.println("Current: "+current+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
                 // mark as visited
                 visited[adj] = true;
                 // add letter to list
@@ -203,9 +203,10 @@ public class CCGraphDFS implements COSC310_P01 {
     }
 
     private void lazyDFS(int current, boolean[] visited, int visitCount) {
-        for (int adj = 0; adj< graph.length; adj++) {
+        var adjacents = findAdjacentsSortedByLowestCost(current);
+        for (int adj : adjacents) {
             if (graph[current][adj] > 0 && graph[current][adj] < 10 && !visited[adj] && !targetAcquired && !giveUp) {
-                System.out.println("Current: "+current+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
+//              System.out.println("Current: "+current+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
                 // mark as visited
                 visited[adj] = true;
                 // add letter to list
@@ -225,8 +226,26 @@ public class CCGraphDFS implements COSC310_P01 {
         }
     }
 
-    private int selectAdjNodeWithLowestCost(int current){
-        return -1;
+    private ArrayList<Integer> findAdjacentsSortedByLowestCost(int current){
+        ArrayList<Integer> adjacents = new ArrayList<Integer>();
+        for (int j = 0; j < graph[current].length; j++) {
+            var cost = graph[current][j];
+            if ( cost > 0 && cost < 10) {
+                // insert in order
+                if(adjacents.size() == 0) // first add
+                    adjacents.add(j);
+                else {
+                    // insert j in the correct spot in order of cost
+                    for ( int node: adjacents ) {
+                        if (cost < graph[current][node]) {
+                            adjacents.add(adjacents.indexOf(node),j);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return adjacents;// sorted by cost
     }
 
     /**
