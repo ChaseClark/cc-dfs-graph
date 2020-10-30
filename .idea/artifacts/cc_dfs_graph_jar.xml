@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="cc-dfs-graph:jar">
+    <output-path>$PROJECT_DIR$/jar</output-path>
+    <root id="archive" name="cc-dfs-graph.jar">
+      <element id="module-output" name="cc-dfs-graph" />
+    </root>
+  </artifact>
+</component>

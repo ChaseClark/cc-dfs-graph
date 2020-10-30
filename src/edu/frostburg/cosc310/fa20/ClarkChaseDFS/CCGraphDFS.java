@@ -11,9 +11,6 @@ import java.util.List;
 
 public class CCGraphDFS implements COSC310_P01 {
 
-    // TODO: Do DFS3
-    // TODO: cleanup code comments and create jar file
-
     private int[][] graph;
     private ArrayList<Character> visitedNodes = new ArrayList<Character>();
     private boolean targetAcquired = false; // true if X or Y is found when searching
@@ -35,7 +32,7 @@ public class CCGraphDFS implements COSC310_P01 {
                         // convert letter to index integer
                         var currentNode = convertLetterToIndex(lineArr[0]);
                         // after this point the values we are looking for are in pairs (connectedNode, cost)
-                        // we need to make a loop that works in pairs could use mod 2 or increment index by 2 each time
+                        // we need to make a loop that works in pairs could use mod 2 = 0 or just increment index by 2 each time
                         // for loop to i < length linArr ; i += 2 ... we start at i = 1 because 0 is currentNode
                         for (int i = 1; i < lineArr.length; i+=2) {
                             var targetNode = convertLetterToIndex(lineArr[i]);
@@ -126,8 +123,16 @@ public class CCGraphDFS implements COSC310_P01 {
         System.out.println("Created by: " + getMyName());
         System.out.println();
 
-        // load the worldmap
-        graph = createAdjMatrix("worldmap_0000.txt",26);
+        // run searches for 3 different text files
+        runAllSearches("worldmap_0000.txt");
+        runAllSearches("worldmap_0001.txt");
+        runAllSearches("worldmap_0002.txt");
+    }
+
+    private void runAllSearches(String path) {
+        graph = createAdjMatrix(path,26);
+        System.out.println("Target Area -> [ "+path+" ]");
+        System.out.println();
         runDFS1();
         runDFS2();
         runDFS3();
@@ -281,8 +286,8 @@ public class CCGraphDFS implements COSC310_P01 {
         var adjacents = findIndecisiveAdjacents(current, visited);
         for (int adj : adjacents) {
             if (graph[current][adj] > 0 && visited[adj]<3 && !targetAcquired) {
-                System.out.println("Current: "+convertIndexToLetter(current)+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
-                System.out.println();
+//                System.out.println("Current: "+convertIndexToLetter(current)+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
+//                System.out.println();
                 // increment to say this node was visited
                 visited[adj]++;
                 // add letter to list
@@ -315,11 +320,11 @@ public class CCGraphDFS implements COSC310_P01 {
                 else {
                     // insert j in the correct spot in order of cost
                     for ( int node: adjacents ) {
-                        if ( visited[node] < 1 ) { // visited goes in front
+                        if ( visited[j] < 1 ) { // unvisited goes in front
                             adjacents.add(adjacents.indexOf(node),j);
                             break;
                         }
-                        else if(cost > graph[current][node]) { // order by cost
+                        else if(cost > graph[current][node] && visited[node] > 0) { // order by cost, make sure we arent bumping out unvisited nodes
                             adjacents.add(adjacents.indexOf(node),j);
                             break;
                         }
@@ -327,7 +332,7 @@ public class CCGraphDFS implements COSC310_P01 {
                 }
             }
         }
-        System.out.println("current: "+convertIndexToLetter(current)+" -> "+adjacents.toString());
+//        System.out.println("current: "+convertIndexToLetter(current)+" -> "+adjacents.toString());
         return adjacents; // sorted by cost
     }
 
