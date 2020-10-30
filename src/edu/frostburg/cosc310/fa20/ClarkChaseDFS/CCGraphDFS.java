@@ -127,10 +127,10 @@ public class CCGraphDFS implements COSC310_P01 {
         System.out.println();
 
         // load the worldmap
-        graph = createAdjMatrix("worldmap_0000.txt",26);
+        graph = createAdjMatrix("worldmap_0002.txt",26);
         runDFS1();
         runDFS2();
-//        runDFS3();
+        runDFS3();
     }
 
     @Override
@@ -262,5 +262,71 @@ public class CCGraphDFS implements COSC310_P01 {
     @Override
     public void runDFS3() {
         // use int[] visited and if (visited[adj] < 3)
+        var visited = new int[graph.length];
+        // reset list
+        visitedNodes.clear();
+        // reset cost count
+        cost = 0;
+        // reset found/giveup to false
+        targetAcquired = false;
+        indecisiveDFS(0,visited);
+        System.out.print("Search 3: Path -> "+visitedNodes.toString()+" Cost -> "+cost+" (");
+        // print whether or not target was found
+        System.out.println(" "+((targetAcquired) ? "Target Eliminated! Mission Successful! )" : "Target Not Found... Mission Failed... )"));
+        System.out.println();
     }
+
+    private void indecisiveDFS(int current, int[] visited) {
+        // create a method for selecting the next node
+        var adjacents = findIndecisiveAdjacents(current, visited);
+        for (int adj : adjacents) {
+            if (graph[current][adj] > 0 && graph[current][adj] < 10 && visited[adj]<3 && !targetAcquired && !giveUp) {
+                System.out.println("Current: "+current+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
+                // increment to say this node was visited
+                visited[adj]++;
+                // add letter to list
+                visitedNodes.add(convertIndexToLetter(adj));
+                // keep track of total cost
+                cost += graph[current][adj];
+                // see if we are done
+                if (adj == 23 || adj == 24) // X or Y
+                    // here we signal to stop searching
+                    targetAcquired = true;
+                else
+                    indecisiveDFS(adj, visited); // keep searching
+            }
+        }
+    }
+
+    /**
+     * Return a list of adjacent nodes sorted by unvisited, then greatest cost
+     * @param current node
+     *
+     */
+    private ArrayList<Integer> findIndecisiveAdjacents(int current, int[] visited) {
+        ArrayList<Integer> adjacents = new ArrayList<Integer>();
+        for (int j = 0; j < graph[current].length; j++) {
+            var cost = graph[current][j];
+            if ( cost > 0) { // ignore blanks
+                // insert in order
+                if(adjacents.size() == 0) // first add
+                    adjacents.add(j);
+                else {
+                    // insert j in the correct spot in order of cost
+                    for ( int node: adjacents ) {
+                        if ( visited[node] < 1 ) { // visited goes in front
+                            adjacents.add(adjacents.indexOf(node),j);
+                            break;
+                        }
+                        else if(cost > graph[current][node]) { // order by cost
+                            adjacents.add(adjacents.indexOf(node),j);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return adjacents; // sorted by cost
+    }
+
 }
