@@ -127,7 +127,7 @@ public class CCGraphDFS implements COSC310_P01 {
         System.out.println();
 
         // load the worldmap
-        graph = createAdjMatrix("worldmap_0002.txt",26);
+        graph = createAdjMatrix("worldmap_0000.txt",26);
         runDFS1();
         runDFS2();
         runDFS3();
@@ -267,7 +267,7 @@ public class CCGraphDFS implements COSC310_P01 {
         visitedNodes.clear();
         // reset cost count
         cost = 0;
-        // reset found/giveup to false
+        // reset found to false
         targetAcquired = false;
         indecisiveDFS(0,visited);
         System.out.print("Search 3: Path -> "+visitedNodes.toString()+" Cost -> "+cost+" (");
@@ -280,8 +280,9 @@ public class CCGraphDFS implements COSC310_P01 {
         // create a method for selecting the next node
         var adjacents = findIndecisiveAdjacents(current, visited);
         for (int adj : adjacents) {
-            if (graph[current][adj] > 0 && graph[current][adj] < 10 && visited[adj]<3 && !targetAcquired && !giveUp) {
-                System.out.println("Current: "+current+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
+            if (graph[current][adj] > 0 && visited[adj]<3 && !targetAcquired) {
+                System.out.println("Current: "+convertIndexToLetter(current)+" Letter: "+convertIndexToLetter(adj)+"("+ adj +")"+" ->Cost: "+graph[current][adj]);
+                System.out.println();
                 // increment to say this node was visited
                 visited[adj]++;
                 // add letter to list
@@ -326,6 +327,7 @@ public class CCGraphDFS implements COSC310_P01 {
                 }
             }
         }
+        System.out.println("current: "+convertIndexToLetter(current)+" -> "+adjacents.toString());
         return adjacents; // sorted by cost
     }
 
